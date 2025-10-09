@@ -85,32 +85,24 @@ foreach ( $assets as $asset ) {
     </div>
 </section>
 
-<section class="card" style="max-width:500px;margin:0 auto 32px;">
-    <h2 style="margin-top:0;">Add Crypto Asset</h2>
-    <?php if ( $add_error ) : ?>
-        <div style="color:#ff006e; margin-bottom:10px; font-weight:bold;"> <?php echo esc_html($add_error); ?> </div>
-    <?php endif; ?>
-    <form method="post" style="display:grid;gap:12px;">
-        <input type="hidden" name="add_asset_nonce" value="<?php echo esc_attr( wp_create_nonce('add_asset') ); ?>" />
-        <label>Name: <input type="text" name="asset_name" required /></label>
-        <label>Symbol: <input type="text" name="asset_symbol" required maxlength="10" style="text-transform:uppercase;" /></label>
-        <label>Balance: <input type="number" name="asset_balance" step="any" min="0.00000001" required /></label>
-        <label>Price (USD): <input type="number" name="asset_price" step="any" min="0.0001" required /></label>
-        <button class="button" type="submit">Add Asset</button>
-    </form>
-</section>
+<!-- Add Asset modal is now triggered from the Asset List header -->
 <section class="chart-wrap">
     <canvas id="portfolio-chart" width="400" height="180"></canvas>
     <script>window.portfolioChartData = {labels:<?php echo json_encode($labels); ?>,data:<?php echo json_encode($data); ?>};</script>
 </section>
 <section>
-    <h2>Asset List</h2>
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px">
+        <h2 style="margin:0">Asset List</h2>
+        <div>
+            <button class="button" id="open-add-asset">Add Asset</button>
+        </div>
+    </div>
     <?php if ( $sell_error ) : ?>
         <div style="color:#ff006e; margin-bottom:10px; font-weight:bold;"> <?php echo esc_html($sell_error); ?> </div>
     <?php endif; ?>
     <table class="asset-table">
         <thead>
-            <tr><th>Name</th><th>Symbol</th><th>Balance</th><th>Price (USD)</th><th>Value (USD)</th><th>Action</th></tr>
+            <tr><th>Name</th><th>Balance</th><th>Price (USD)</th><th>Value (USD)</th><th>Allocation</th><th>Action</th></tr>
         </thead>
         <tbody>
         <?php foreach ( $assets as $asset ) :
@@ -118,24 +110,74 @@ foreach ( $assets as $asset ) {
             $balance = (float) get_post_meta( $asset->ID, '_asset_balance', true );
             $price = (float) get_post_meta( $asset->ID, '_asset_price', true );
             $value = $balance * $price;
+            $percent = $total_value > 0 ? round( ( $value / $total_value ) * 100, 2 ) : 0;
         ?>
             <tr>
-                <td><a href="<?php echo get_permalink( $asset ); ?>"><?php echo esc_html( get_the_title( $asset ) ); ?></a></td>
-                <td><?php echo esc_html( strtoupper( $symbol ) ); ?></td>
-                <td><?php echo $balance; ?></td>
-                <td>$<?php echo number_format( $price, 2 ); ?></td>
-                <td>$<?php echo number_format( $value, 2 ); ?></td>
                 <td>
-                    <form method="post" style="display:inline;">
+                    <div class="asset-row">
+                  <?php $coin_page = get_page_by_path( 'coin' );
+                      $base = $coin_page ? get_permalink( $coin_page ) : home_url( '/coin/' );
+                      $coin_link = esc_url( add_query_arg( 'id', strtolower( $symbol ), $base ) ); ?>
+                        <div class="asset-badge"><a href="<?php echo $coin_link; ?>" style="color:inherit;text-decoration:none"><?php echo esc_html( strtoupper(substr($symbol,0,2)) ); ?></a></div>
+                            <div class="asset-meta">
+                                <a href="<?php echo $coin_link; ?>" class="asset-name"><?php echo esc_html( get_the_title( $asset ) ); ?></a>
+                            <div class="asset-symbol"><?php echo esc_html( strtoupper( $symbol ) ); ?></div>
+                        </div>
+                    </div>
+                </td>
+                <td class="asset-balance"><?php echo $balance; ?></td>
+                <td class="asset-price">$<?php echo number_format( $price, 2 ); ?></td>
+                <td class="asset-value">$<?php echo number_format( $value, 2 ); ?></td>
+                <td>
+                    <div class="allocation">
+                        <div class="allocation-bar"><div class="allocation-fill" style="width:<?php echo esc_attr( $percent ); ?>%"></div></div>
+                        <div class="allocation-percent"><?php echo esc_html( $percent ); ?>%</div>
+                    </div>
+                </td>
+                <td>
+                    <div class="asset-actions">
+                    <form method="post" style="display:inline;" data-asset-name="<?php echo esc_attr( get_the_title( $asset ) ); ?>">
                         <input type="hidden" name="sell_asset_nonce" value="<?php echo esc_attr( wp_create_nonce('sell_asset') ); ?>" />
                         <input type="hidden" name="sell_asset_id" value="<?php echo esc_attr( $asset->ID ); ?>" />
                         <input type="number" name="sell_amount" min="0.00000001" max="<?php echo $balance; ?>" step="any" placeholder="Amount" style="width:90px;" required />
                         <button class="button button-sell" type="submit">Sell</button>
                     </form>
+                    </div>
                 </td>
             </tr>
         <?php endforeach; ?>
         </tbody>
     </table>
 </section>
+<!-- Sell confirmation modal -->
+<div class="modal-backdrop" id="sell-modal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sell-modal-title">
+        <h3 id="sell-modal-title">Confirm Sell</h3>
+        <p>You're about to sell <strong id="sell-modal-amount">0</strong> of <span id="sell-modal-name"></span>. This action will update your portfolio.</p>
+        <div class="modal-actions">
+            <button class="btn btn-cancel" id="sell-modal-cancel">Cancel</button>
+            <button class="btn btn-confirm" id="sell-modal-confirm">Confirm Sell</button>
+        </div>
+    </div>
+</div>
+<!-- Add Asset modal -->
+<div class="modal-backdrop" id="add-asset-modal" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="add-asset-title">
+        <h3 id="add-asset-title">Add Crypto Asset</h3>
+        <?php if ( $add_error ) : ?>
+            <div style="color:#ff006e; margin-bottom:10px; font-weight:bold;"> <?php echo esc_html($add_error); ?> </div>
+        <?php endif; ?>
+        <form method="post" id="add-asset-form" style="display:grid;gap:10px">
+            <input type="hidden" name="add_asset_nonce" value="<?php echo esc_attr( wp_create_nonce('add_asset') ); ?>" />
+            <label>Name: <input type="text" name="asset_name" required /></label>
+            <label>Symbol: <input type="text" name="asset_symbol" required maxlength="10" style="text-transform:uppercase;" /></label>
+            <label>Balance: <input type="number" name="asset_balance" step="any" min="0.00000001" required /></label>
+            <label>Price (USD): <input type="number" name="asset_price" step="any" min="0.0001" required /></label>
+            <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
+                <button class="btn btn-cancel" type="button" id="add-asset-cancel">Cancel</button>
+                <button class="btn btn-confirm" type="submit">Add Asset</button>
+            </div>
+        </form>
+    </div>
+</div>
 <?php get_footer(); ?>
