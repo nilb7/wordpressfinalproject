@@ -65,7 +65,7 @@ if ( false === $coins ) {
                 <?php $coin_page = get_page_by_path( 'coin' );
                     $base = $coin_page ? get_permalink( $coin_page ) : home_url( '/coin/' );
                     $coin_link = esc_url( add_query_arg( 'id', $c['id'], $base ) ); ?>
-                        <?php if ( $thumb ) : ?><a href="<?php echo $coin_link; ?>"><img src="<?php echo esc_url( $thumb ); ?>" alt="<?php echo esc_attr( $name ); ?>" style="width:28px;height:28px;border-radius:50%;"></a><?php endif; ?>
+                        <?php if ( $thumb ) : ?><a href="<?php echo $coin_link; ?>"><img src="<?php echo esc_url( $thumb ); ?>" alt="<?php echo esc_attr( $name ); ?>" style="width:22px;height:22px;border-radius:50%;"></a><?php endif; ?>
                         <div>
                             <div style="font-weight:700"><a href="<?php echo $coin_link; ?>" style="color:inherit;text-decoration:none"><?php echo esc_html( $name ); ?></a></div>
                             <div style="color:var(--muted);font-size:0.85rem"><?php echo esc_html( $symbol ); ?></div>

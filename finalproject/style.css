@@ -72,7 +72,7 @@ body {
 
 /* Asset badge and improved row layout */
 .asset-row { display:flex; align-items:center; gap:12px; }
-.asset-badge { width:44px; height:44px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent-2)); box-shadow:0 6px 18px rgba(3,7,18,0.6); flex:0 0 44px; }
+.asset-badge { width:32px; height:32px; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; color:#fff; background:linear-gradient(135deg,var(--accent),var(--accent-2)); box-shadow:0 6px 18px rgba(3,7,18,0.6); flex:0 0 32px; }
 .asset-meta { display:flex; flex-direction:column; gap:2px; }
 .asset-name { font-weight:700; color:#fff }
 .asset-symbol { font-size:0.85rem; color:var(--muted); letter-spacing:0.6px }

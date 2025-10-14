@@ -89,7 +89,7 @@ if ( false === $chart ) {
         $vol = $coin['market_data']['total_volume']['usd'] ?? 0;
     ?>
     <div style="display:flex;gap:16px;align-items:center;margin-bottom:12px">
-        <?php if ($img) : ?><img src="<?php echo esc_url($img); ?>" style="width:56px;height:56px;border-radius:12px" alt="<?php echo esc_attr($name); ?>" /><?php endif; ?>
+        <?php if ($img) : ?><img src="<?php echo esc_url($img); ?>" style="width:40px;height:40px;border-radius:10px" alt="<?php echo esc_attr($name); ?>" /><?php endif; ?>
         <div>
             <h2 style="margin:0"><?php echo esc_html($name); ?> <span style="color:var(--muted);font-size:0.9rem"><?php echo esc_html($symbol); ?></span></h2>
             <div style="font-weight:800;font-size:1.2rem">$<?php echo number_format($price,2); ?></div>
