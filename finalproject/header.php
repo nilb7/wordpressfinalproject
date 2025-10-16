@@ -42,10 +42,10 @@
     <main class="container">
         <section class="hero" aria-label="Intro">
             <div class="left">
-                <h2>Track your crypto holdings, simply.</h2>
-                <p>Quickly add assets, update prices, and visualise your portfolio allocation.</p>
+                <h2>Gjurmoni zotërimet tuaja të kriptovalutave, thjesht.</h2>
+                <p>Shtoni shpejt asete, përditësoni çmimet dhe vizualizoni shpërndarjen e portofolit tuaj.</p>
             </div>
             <div class="cta">
-                <button class="button" id="update-prices-hero">Update Prices</button>
+                <button class="button" id="update-prices-hero">Përditëso Çmimet</button>
             </div>
         </section>

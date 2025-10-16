@@ -72,16 +72,16 @@ foreach ( $assets as $asset ) {
 ?>
 <section class="dashboard-cards">
     <div class="card gradient-card">
-        <div class="card-title">Total Portfolio Value</div>
+        <div class="card-title">Vlera totale e portofolit</div>
         <div class="card-value">$<?php echo number_format( $total_value, 2 ); ?></div>
     </div>
     <div class="card gradient-card">
-        <div class="card-title">Assets Tracked</div>
+        <div class="card-title">Asetet e gjurmuara</div>
         <div class="card-value"><?php echo count( $assets ); ?></div>
     </div>
     <div class="card gradient-card">
-        <div class="card-title">Update Prices</div>
-        <button class="button" id="update-prices">Update Prices</button>
+        <div class="card-title">Përditëso Çmimet</div>
+        <button class="button" id="update-prices">Përditëso Çmimet</button>
     </div>
 </section>
 
@@ -92,9 +92,9 @@ foreach ( $assets as $asset ) {
 </section>
 <section>
     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px">
-        <h2 style="margin:0">Asset List</h2>
+        <h2 style="margin:0">Lista e aseteve</h2>
         <div>
-            <button class="button" id="open-add-asset">Add Asset</button>
+            <button class="button" id="open-add-asset">Shto asset</button>
         </div>
     </div>
     <?php if ( $sell_error ) : ?>
@@ -102,7 +102,7 @@ foreach ( $assets as $asset ) {
     <?php endif; ?>
     <table class="asset-table">
         <thead>
-            <tr><th>Name</th><th>Balance</th><th>Price (USD)</th><th>Value (USD)</th><th>Allocation</th><th>Action</th></tr>
+            <tr><th>Emri</th><th>Bilanci</th><th>Çmimi (USD)</th><th>Vlera (USD)</th><th>Alokimi</th><th>Veprimi</th></tr>
         </thead>
         <tbody>
         <?php foreach ( $assets as $asset ) :
@@ -140,7 +140,7 @@ foreach ( $assets as $asset ) {
                         <input type="hidden" name="sell_asset_nonce" value="<?php echo esc_attr( wp_create_nonce('sell_asset') ); ?>" />
                         <input type="hidden" name="sell_asset_id" value="<?php echo esc_attr( $asset->ID ); ?>" />
                         <input type="number" name="sell_amount" min="0.00000001" max="<?php echo $balance; ?>" step="any" placeholder="Amount" style="width:90px;" required />
-                        <button class="button button-sell" type="submit">Sell</button>
+                        <button class="button button-sell" type="submit">Shit</button>
                     </form>
                     </div>
                 </td>
@@ -151,12 +151,12 @@ foreach ( $assets as $asset ) {
 </section>
 <!-- Sell confirmation modal -->
 <div class="modal-backdrop" id="sell-modal" aria-hidden="true">
-    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="sell-modal-title">
-        <h3 id="sell-modal-title">Confirm Sell</h3>
-        <p>You're about to sell <strong id="sell-modal-amount">0</strong> of <span id="sell-modal-name"></span>. This action will update your portfolio.</p>
-        <div class="modal-actions">
-            <button class="btn btn-cancel" id="sell-modal-cancel">Cancel</button>
-            <button class="btn btn-confirm" id="sell-modal-confirm">Confirm Sell</button>
+<div class="modal" role="dialog" aria-modal="true" aria-labelledby="sell-modal-title">
+<h3 id="sell-modal-title">Konfirmo Shitjen</h3>
+<p>Ju jeni gati të shisni <strong id="sell-modal-amount">0</strong> nga <span id="sell-modal-name"></span>. Ky veprim do të përditësojë portofolin tuaj.</p>
+<div class="modal-actions">
+<button class="btn btn-cancel" id="sell-modal-cancel">Anulo</button>
+<button class="btn btn-confirm" id="sell-modal-confirm">Konfirmo Shitjen</button>
         </div>
     </div>
 </div>
@@ -169,13 +169,13 @@ foreach ( $assets as $asset ) {
         <?php endif; ?>
         <form method="post" id="add-asset-form" style="display:grid;gap:10px">
             <input type="hidden" name="add_asset_nonce" value="<?php echo esc_attr( wp_create_nonce('add_asset') ); ?>" />
-            <label>Name: <input type="text" name="asset_name" required /></label>
-            <label>Symbol: <input type="text" name="asset_symbol" required maxlength="10" style="text-transform:uppercase;" /></label>
-            <label>Balance: <input type="number" name="asset_balance" step="any" min="0.00000001" required /></label>
-            <label>Price (USD): <input type="number" name="asset_price" step="any" min="0.0001" required /></label>
+            <label>Emri: <input type="text" name="asset_name" required /></label>
+            <label>Simbol: <input type="text" name="asset_symbol" required maxlength="10" style="text-transform:uppercase;" /></label>
+            <label>Bilanci: <input type="number" name="asset_balance" step="any" min="0.00000001" required /></label>
+            <label>Çmimi (USD): <input type="number" name="asset_price" step="any" min="0.0001" required /></label>
             <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:6px">
-                <button class="btn btn-cancel" type="button" id="add-asset-cancel">Cancel</button>
-                <button class="btn btn-confirm" type="submit">Add Asset</button>
+                <button class="btn btn-cancel" type="button" id="add-asset-cancel">Anulo</button>
+                <button class="btn btn-confirm" type="submit">Shto asset</button>
             </div>
         </form>
     </div>
